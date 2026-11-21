@@ -29,7 +29,9 @@ CREATE TABLE IF NOT EXISTS requirements (
 
 
 def save(courses: list[TakenCourse], requirements: list[AuditRequirement], source: str,
-         json_path: Path = config.AUDIT_JSON, db_path: Path = config.DB_FILE) -> dict:
+         json_path: Path | None = None, db_path: Path | None = None) -> dict:
+    json_path = json_path or config.AUDIT_JSON
+    db_path = db_path or config.DB_FILE
     json_path.parent.mkdir(parents=True, exist_ok=True)
     fetched_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     audit = {"fetched_at": fetched_at, "source": source,
@@ -55,7 +57,8 @@ def save(courses: list[TakenCourse], requirements: list[AuditRequirement], sourc
     return audit
 
 
-def load_courses(json_path: Path = config.AUDIT_JSON) -> list[TakenCourse]:
+def load_courses(json_path: Path | None = None) -> list[TakenCourse]:
+    json_path = json_path or config.AUDIT_JSON
     if not json_path.exists():
         raise FileNotFoundError(
             f"No audit at {json_path}. Run `scrape`, or `import-courses` with a CSV/JSON of your courses.")

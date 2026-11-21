@@ -12,7 +12,7 @@ rwi = "rutgers_whatif.cli:main"
 include = ["rutgers_whatif*"]
 
 [tool.setuptools.package-data]
-rutgers_whatif = ["programs/*.json"]
+rutgers_whatif = ["programs/*.json", "web/*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

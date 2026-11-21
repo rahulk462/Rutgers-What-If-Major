@@ -53,7 +53,8 @@ def summarize(index: list[dict]) -> dict:
             "mode": "json" if json_endpoints else "html"}
 
 
-def run(auth_file: Path = config.AUTH_FILE, start_url: str = config.DN_HOME_URL) -> dict:
+def run(auth_file: Path = config.AUTH_FILE, start_url: str = config.DN_HOME_URL,
+        wait=input) -> dict:
     from playwright.sync_api import sync_playwright
 
     config.ensure_dirs()
@@ -96,7 +97,7 @@ def run(auth_file: Path = config.AUTH_FILE, start_url: str = config.DN_HOME_URL)
             "  3. optionally a what-if audit for another program\n"
             "Then come back here and press Enter."
         )
-        input("Press Enter when done... ")
+        wait("Press Enter when done... ")
         browser.close()
 
     (out_dir / "index.json").write_text(json.dumps(index, indent=2))

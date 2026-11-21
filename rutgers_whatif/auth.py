@@ -38,7 +38,12 @@ def _secure_write(path: Path, data: dict) -> None:
     os.chmod(path, stat.S_IRUSR | stat.S_IWUSR)
 
 
-def login(auth_file: Path = config.AUTH_FILE, start_url: str = config.DN_HOME_URL) -> Path:
+def _terminal_wait(prompt: str) -> None:
+    input(prompt)
+
+
+def login(auth_file: Path = config.AUTH_FILE, start_url: str = config.DN_HOME_URL,
+          wait=_terminal_wait) -> Path:
     """Open a headed browser, let the user log in by hand, save the session."""
     from playwright.sync_api import sync_playwright
 
@@ -51,10 +56,10 @@ def login(auth_file: Path = config.AUTH_FILE, start_url: str = config.DN_HOME_UR
             "\nA browser window is open. Log in with your NetID and approve Duo yourself.\n"
             "When your Degree Navigator page has fully loaded, come back here and press Enter."
         )
-        input("Press Enter when you are logged in... ")
+        wait("Press Enter when you are logged in... ")
         if is_login_url(page.url):
             browser.close()
-            raise SystemExit("Still on the login page; nothing saved. Run `login` again.")
+            raise SessionExpired("Still on the login page; nothing saved. Try logging in again.")
         _secure_write(auth_file, context.storage_state())
         browser.close()
     print(f"Session saved to {auth_file} (keep it private; it is git-ignored).")

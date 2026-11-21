@@ -31,7 +31,21 @@ playwright install chromium        # downloads the browser Playwright drives
 pytest -q                          # optional: run the tests (should all pass)
 ```
 
-## Workflow
+## Run it in your browser (localhost)
+
+```bash
+python -m rutgers_whatif serve
+```
+
+This opens **http://127.0.0.1:8000** (use `--port` to change it, or `--no-browser`
+to stop it opening a tab). The page walks you through the same steps as the
+commands below: log in, discover, scrape (or paste a course CSV), download course
+data, then compare programs. When a step opens a browser window for you (login
+or discovery), do your part there, then click **I'm done** on the page. The
+server only listens on 127.0.0.1 and rejects requests from any other host name.
+Stop it with Ctrl+C.
+
+## Workflow (command line)
 
 ```bash
 # 1. Log in by hand (NetID + Duo) and save the session to auth.json
@@ -128,6 +142,7 @@ rutgers_whatif/
   prereqs.py       parse/evaluate SOC prerequisite strings
   requirements.py  requirement model + evaluator
   whatif.py        multi-program comparison and report
+  web.py, web/     local web page (`serve`)
   programs/        requirement definitions (JSON)
 tests/             pytest suite with real SOC prerequisite samples
 ```
