@@ -1,0 +1,49 @@
+{
+  "id": "math-minor",
+  "name": "Mathematics minor",
+  "kind": "minor",
+  "school": "SAS",
+  "sources": [
+    "https://www.math.rutgers.edu/academics/undergraduate/minors"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {
+    "min_grade": "C",
+    "max_d": 1
+  },
+  "default_credits": 3,
+  "notes": [
+    "At least three of the four electives must be taken at RU-NB (not checked)."
+  ],
+  "requirements": [
+    {
+      "id": "mm-core",
+      "name": "Calculus I-III and linear algebra",
+      "type": "all",
+      "no_d": true,
+      "courses": [
+        "01:640:151",
+        "01:640:152",
+        "01:640:251",
+        "01:640:250"
+      ]
+    },
+    {
+      "id": "mm-electives",
+      "name": "Four more math courses",
+      "type": "choose",
+      "count": 4,
+      "from": [
+        "01:640:252",
+        "01:640:244",
+        "01:640:3xx",
+        "01:640:4xx"
+      ],
+      "exclude": [
+        "01:640:491",
+        "01:640:492"
+      ],
+      "label": "252, 244 or any 300/400-level 01:640 course"
+    }
+  ]
+}

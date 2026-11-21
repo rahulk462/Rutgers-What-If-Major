@@ -1,0 +1,56 @@
+{
+  "note": "Codes in a group satisfy each other. Assumptions are marked; edit if your advisor says otherwise.",
+  "groups": [
+    {
+      "codes": [
+        "01:198:111",
+        "01:198:121"
+      ],
+      "why": "CS intro sequence renumbered (catalog: new sequence from Spring 2027)"
+    },
+    {
+      "codes": [
+        "01:198:112",
+        "01:198:122"
+      ],
+      "why": "CS intro sequence renumbered"
+    },
+    {
+      "codes": [
+        "01:198:142",
+        "01:960:142"
+      ],
+      "why": "Data 101 cross-listed"
+    },
+    {
+      "codes": [
+        "01:640:151",
+        "01:640:191",
+        "01:640:153"
+      ],
+      "why": "ASSUMPTION: honors/intensive Calc I. 640:135 is NOT included; add it if your program accepts it"
+    },
+    {
+      "codes": [
+        "01:640:152",
+        "01:640:192",
+        "01:640:154"
+      ],
+      "why": "ASSUMPTION: honors/intensive Calc II"
+    },
+    {
+      "codes": [
+        "01:640:251",
+        "01:640:291"
+      ],
+      "why": "ASSUMPTION: honors Calc III"
+    },
+    {
+      "codes": [
+        "01:640:252",
+        "01:640:292"
+      ],
+      "why": "ASSUMPTION: honors Calc IV / differential equations"
+    }
+  ]
+}

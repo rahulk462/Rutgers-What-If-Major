@@ -1,0 +1,99 @@
+{
+  "id": "math-ba",
+  "name": "Mathematics major (Option A, standard)",
+  "kind": "major",
+  "school": "SAS",
+  "sources": [
+    "https://www.math.rutgers.edu/academics/undergraduate/majors"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {
+    "min_grade": "C",
+    "max_d": 1
+  },
+  "default_credits": 3,
+  "notes": [
+    "C or better required in 250, 251, 252, 300 and all but one further math course.",
+    "Honors (Option B) and Actuarial (Option C) tracks are not modeled.",
+    "At least four upper-level courses incl. the analysis and algebra course must be taken at RU-NB (not checked).",
+    "Honors calculus (191/192/291/292) counts for 151/152/251/252 via equivalents.json."
+  ],
+  "requirements": [
+    {
+      "id": "math-calc",
+      "name": "Calculus I-III, linear algebra, differential equations",
+      "type": "all",
+      "no_d": true,
+      "courses": [
+        "01:640:151",
+        "01:640:152",
+        "01:640:251",
+        "01:640:250",
+        "01:640:252"
+      ]
+    },
+    {
+      "id": "math-cs",
+      "name": "Intro computing (CS 107 or 111/121)",
+      "type": "choose",
+      "count": 1,
+      "no_d": true,
+      "from": [
+        "01:198:107",
+        "01:198:111",
+        "01:198:121"
+      ]
+    },
+    {
+      "id": "math-300",
+      "name": "Intro to Mathematical Reasoning (300)",
+      "type": "all",
+      "no_d": true,
+      "courses": [
+        "01:640:300"
+      ]
+    },
+    {
+      "id": "math-analysis",
+      "name": "Analysis course (311, 312 or 411)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:311",
+        "01:640:312",
+        "01:640:411"
+      ]
+    },
+    {
+      "id": "math-algebra",
+      "name": "Algebra course (350, 351 or 451)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:350",
+        "01:640:351",
+        "01:640:451"
+      ]
+    },
+    {
+      "id": "math-electives",
+      "name": "Five more 300-400 level math courses",
+      "type": "choose",
+      "count": 5,
+      "from": [
+        "01:640:3xx",
+        "01:640:4xx"
+      ],
+      "exclude": [
+        "01:640:491",
+        "01:640:492",
+        "01:640:494",
+        "01:640:495",
+        "01:640:496",
+        "01:640:497",
+        "01:640:498"
+      ],
+      "label": "any 3-credit 01:640 300/400-level course"
+    }
+  ]
+}
