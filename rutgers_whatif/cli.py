@@ -12,7 +12,11 @@ from . import config
 
 def _cmd_login(a):
     from . import auth
-    auth.login()
+    try:
+        auth.login()
+    except auth.SessionExpired as e:
+        print(e)
+        return 1
 
 
 def _cmd_check(a):
@@ -96,6 +100,11 @@ def _cmd_prereq(a):
     return 0
 
 
+def _cmd_serve(a):
+    from . import web
+    web.serve(port=a.port, open_browser=not a.no_browser)
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="rutgers_whatif", description=__doc__)
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -125,6 +134,10 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("prereq", help="show a course's prerequisites and whether you meet them")
     s.add_argument("code")
     s.set_defaults(f=_cmd_prereq)
+    s = sub.add_parser("serve", help="run the local web page at http://127.0.0.1:8000")
+    s.add_argument("--port", type=int, default=8000)
+    s.add_argument("--no-browser", action="store_true", help="don't open a browser tab automatically")
+    s.set_defaults(f=_cmd_serve)
     return p
 
 
