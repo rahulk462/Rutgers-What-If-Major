@@ -18,7 +18,8 @@ RAW_DIR = DATA_DIR / "raw"          # raw HTML / JSON captured from Degree Navig
 SOC_DIR = DATA_DIR / "soc"          # cached Schedule of Classes downloads
 DB_FILE = DATA_DIR / "whatif.sqlite"
 AUDIT_JSON = DATA_DIR / "audit.json"
-PAGES_FILE = DATA_DIR / "dn_pages.json"        # pages/endpoints found by `discover`
+PAGES_FILE = DATA_DIR / "dn_pages.json"
+MANUAL_FILE = DATA_DIR / "manual_courses.json"  # AP / transfer credit you add by hand        # pages/endpoints found by `discover`
 
 # Degree Navigator entry point. Logging in goes through Rutgers CAS + Duo,
 # which you always complete by hand in the visible browser window.

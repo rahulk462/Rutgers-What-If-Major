@@ -16,7 +16,7 @@ from typing import Any, Iterable
 
 from bs4 import BeautifulSoup, Tag
 
-from .courses import (GRADE_TOKEN_RE, AuditRequirement, TakenCourse, find_codes,
+from .courses import (GRADE_TOKEN_RE, TRANSFER_RE, AuditRequirement, TakenCourse, find_codes,
                       normalize_code, normalize_term)
 
 SATISFIED_RE = re.compile(r"\b(complete[d]?|satisfied|fulfilled|met|done)\b", re.I)
@@ -80,6 +80,18 @@ def _header_map(cells: list[str]) -> dict[str, int]:
     return out
 
 
+def _table_context(table: Tag) -> str:
+    """Caption / nearest heading above a table, e.g. 'Transfer and Test Credit'."""
+    parts = []
+    cap = table.find("caption")
+    if cap:
+        parts.append(_text(cap))
+    prev = table.find_previous(["h1", "h2", "h3", "h4", "h5", "h6", "legend", "strong", "b", "th"])
+    if prev is not None and not (prev.name == "th" and table in prev.parents):
+        parts.append(_text(prev))
+    return " ".join(parts)
+
+
 def parse_course_tables(soup: BeautifulSoup) -> list[TakenCourse]:
     found: list[TakenCourse] = []
     for table in soup.find_all("table"):
@@ -88,7 +100,9 @@ def parse_course_tables(soup: BeautifulSoup) -> list[TakenCourse]:
             continue
         header_cells = [_text(c) for c in rows[0].find_all(["th", "td"])]
         hmap = _header_map(header_cells)
-        if "grade" not in hmap:
+        context = _table_context(table) + " " + " ".join(header_cells)
+        transfer_table = bool(TRANSFER_RE.search(context))
+        if "grade" not in hmap and not transfer_table:
             continue
         for row in rows[1:]:
             cells = [_text(c) for c in row.find_all(["td", "th"])]
@@ -96,14 +110,20 @@ def parse_course_tables(soup: BeautifulSoup) -> list[TakenCourse]:
                 continue
             code = normalize_code(cells[hmap["code"]] if "code" in hmap and hmap["code"] < len(cells) else " ".join(cells))
             if not code:
+                code = normalize_code(" ".join(cells))
+            if not code:
                 continue
-            grade = cells[hmap["grade"]] if hmap["grade"] < len(cells) else ""
+            grade = cells[hmap["grade"]] if "grade" in hmap and hmap["grade"] < len(cells) else ""
             credits = None
             if "credits" in hmap and hmap["credits"] < len(cells) and CREDIT_CELL_RE.match(cells[hmap["credits"]]):
                 credits = float(cells[hmap["credits"]])
-            term = normalize_term(cells[hmap["term"]]) if "term" in hmap and hmap["term"] < len(cells) else None
+            term_cell = cells[hmap["term"]] if "term" in hmap and hmap["term"] < len(cells) else ""
             title = cells[hmap["title"]] if "title" in hmap and hmap["title"] < len(cells) else ""
-            found.append(TakenCourse(code=code, title=title, credits=credits, grade=grade.strip(), term=term))
+            other = " ".join(c for i, c in enumerate(cells) if i not in (hmap.get("title"), hmap.get("code")))
+            transfer = transfer_table or bool(TRANSFER_RE.search(other)) or grade.strip().upper() in ("T", "TR", "TZ")
+            term = normalize_term(term_cell) or (term_cell.strip()[:40] if transfer and term_cell.strip() else None)
+            found.append(TakenCourse(code=code, title=title, credits=credits, grade=grade.strip(), term=term,
+                                     transfer=transfer))
     return found
 
 
@@ -117,7 +137,8 @@ def parse_course_lines(text: str) -> list[TakenCourse]:
         tokens = line.replace(code, " ").split()
         grade = next((t for t in reversed(tokens) if GRADE_TOKEN_RE.match(t.upper())), "")
         credits = next((float(t) for t in tokens if CREDIT_CELL_RE.match(t) and float(t) <= 12), None)
-        out.append(TakenCourse(code=code, grade=grade, credits=credits, term=normalize_term(line)))
+        out.append(TakenCourse(code=code, grade=grade, credits=credits, term=normalize_term(line),
+                               transfer=bool(TRANSFER_RE.search(line.replace(code, " ")))))
     return out
 
 
@@ -230,8 +251,12 @@ def parse_json(payload: Any, program: str = "") -> dict:
                 cr = float(cr) if cr not in (None, "") else None
             except (TypeError, ValueError):
                 cr = None
+            term_raw = str(_pick(d, "term") or "")
             courses.append(TakenCourse(code=code, title=str(_pick(d, "title") or ""), credits=cr,
-                                       grade=str(grade), term=normalize_term(str(_pick(d, "term") or ""))))
+                                       grade=str(grade), term=normalize_term(term_raw) or (term_raw[:40] or None),
+                                       transfer=bool(TRANSFER_RE.search(" ".join(
+                                           str(v) for k, v in d.items() if not isinstance(v, (dict, list))
+                                           and "title" not in k.lower())))))
             continue
         status = _pick(d, "status")
         name = _pick(d, "req_name")

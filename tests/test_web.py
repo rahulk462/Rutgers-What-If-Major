@@ -22,6 +22,7 @@ def server(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "DB_FILE", tmp_path / "data" / "whatif.sqlite")
     monkeypatch.setattr(config, "PAGES_FILE", tmp_path / "data" / "dn_pages.json")
     monkeypatch.setattr(config, "AUTH_FILE", tmp_path / "auth.json")
+    monkeypatch.setattr(config, "MANUAL_FILE", tmp_path / "data" / "manual_courses.json")
     config.ensure_dirs()
     httpd = ThreadingHTTPServer(("127.0.0.1", 0), web.Handler)
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
@@ -90,3 +91,13 @@ def test_waiting_job_released_by_done(server):
     assert post(server + "/api/done", {})[1]["released"] is True
     wait_job(server)
     assert seen == [1]
+
+
+def test_add_and_list_ap_credit(server):
+    code, body = post(server + "/api/courses/add", {"code": "01:640:151", "term": "AP", "credits": "4"})
+    assert code == 200 and body["added"]["transfer"]
+    assert post(server + "/api/courses/add", {"code": "nope"})[0] == 400
+    rows = json.loads(get(server + "/api/courses")[1])["courses"]
+    assert rows[0]["code"] == "01:640:151" and rows[0]["source"] == "manual"
+    r = json.loads(get(server + "/api/whatif?programs=math-minor")[1])
+    assert "01:640:151" in r["programs"][0]["applied"]

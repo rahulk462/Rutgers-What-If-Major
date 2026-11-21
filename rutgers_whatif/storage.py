@@ -57,14 +57,55 @@ def save(courses: list[TakenCourse], requirements: list[AuditRequirement], sourc
     return audit
 
 
+def load_manual() -> list[TakenCourse]:
+    """Courses you added by hand (e.g. AP credit). Kept separate so re-scraping never erases them."""
+    path = config.MANUAL_FILE
+    if not path.exists():
+        return []
+    return [TakenCourse.from_dict({**c, "source": "manual"}) for c in json.loads(path.read_text())]
+
+
+def _write_manual(courses: list[TakenCourse]) -> None:
+    config.MANUAL_FILE.parent.mkdir(parents=True, exist_ok=True)
+    config.MANUAL_FILE.write_text(json.dumps([c.to_dict() for c in courses], indent=2))
+
+
+def add_manual(code: str, grade: str = "T", credits: float | None = None, title: str = "",
+               term: str | None = "AP", transfer: bool = True) -> TakenCourse:
+    from .courses import normalize_code
+
+    norm = normalize_code(code)
+    if not norm:
+        raise ValueError(f"{code!r} isn't a course code like 01:640:151")
+    course = TakenCourse(code=norm, title=title, credits=credits, grade=grade or "T", term=term,
+                         source="manual", transfer=transfer)
+    rest = [c for c in load_manual() if not (c.code == norm and c.term == term)]
+    _write_manual(rest + [course])
+    return course
+
+
+def remove_manual(code: str) -> int:
+    from .courses import normalize_code
+
+    norm = normalize_code(code) or code
+    before = load_manual()
+    after = [c for c in before if c.code != norm]
+    _write_manual(after)
+    return len(before) - len(after)
+
+
 def load_courses(json_path: Path | None = None) -> list[TakenCourse]:
+    """Scraped/imported courses plus anything you added by hand."""
     json_path = json_path or config.AUDIT_JSON
+    manual = load_manual()
     if not json_path.exists():
+        if manual:
+            return manual
         raise FileNotFoundError(
-            "No courses loaded yet. Run Discover and then Scrape (or import a course CSV) first. "
-            f"(Looked for {json_path}.)")
+            "No courses loaded yet. Run Discover and then Scrape (or import a course CSV), "
+            f"or add AP/transfer credit by hand. (Looked for {json_path}.)")
     data = json.loads(json_path.read_text())
-    return [TakenCourse.from_dict(c) for c in data.get("courses", [])]
+    return [TakenCourse.from_dict(c) for c in data.get("courses", [])] + manual
 
 
 def import_courses(path: Path) -> list[TakenCourse]:

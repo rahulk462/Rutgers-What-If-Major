@@ -85,6 +85,22 @@ Try it without logging in, using the made-up sample transcript:
 python -m rutgers_whatif whatif cs-ba math-minor --current cs-bs --courses examples/sample_courses.csv
 ```
 
+### AP, test and transfer credit
+
+Rows marked AP, transfer, test credit, IB or CLEP, or graded T/TR/TZ, count
+as completed (never "in progress"), including rows in a separate
+"Transfer / Test Credit" table. If some are still missing, add the Rutgers
+course each one counts as. These hand-added courses live in
+`data/manual_courses.json` and survive re-scraping:
+
+```bash
+python -m rutgers_whatif add-course 01:640:151 --term AP --credits 4
+python -m rutgers_whatif courses                 # list everything the tool counts
+python -m rutgers_whatif remove-course 01:640:151
+```
+
+On the localhost page, the same thing is in "Your courses & AP credit".
+
 ### If scraping doesn't parse your pages well
 
 Degree Navigator's markup isn't documented, so the HTML parser uses

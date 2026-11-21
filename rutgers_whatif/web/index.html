@@ -25,6 +25,8 @@ main { max-width: 1100px; margin: 0 auto; padding: 8px 16px 40px; display: grid;
   grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 900px) { main { grid-template-columns: 360px minmax(0, 1fr); align-items: start; } }
 .steps { display: grid; gap: 14px; min-width: 0; }
+section { min-width: 0; }
+#mine td, #mine th { white-space: normal; } #mine td:first-child { overflow-wrap: anywhere; }
 section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
 h2 { margin: 0 0 8px; font-size: 15px; display: flex; gap: 8px; align-items: center; }
 h2 .n { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
@@ -109,6 +111,22 @@ summary { cursor: pointer; font-weight: 600; }
       <input type="file" id="csvfile" accept=".csv,text/csv">
       <textarea id="csv" placeholder="code,title,credits,grade,term&#10;01:198:111,Intro CS,4,A,Fall 2024"></textarea>
       <div class="row" style="margin-top:6px"><button id="import">Import courses</button></div>
+    </details>
+  </section>
+
+  <section id="mine">
+    <h2><span class="n">+</span>Your courses &amp; AP credit</h2>
+    <p class="hint">AP, test and transfer credit counts as completed. If any is missing, add the <strong>Rutgers course it counts as</strong> (shown in Degree Navigator or on your transcript, e.g. AP Calculus BC might show as 01:640:151 and 01:640:152). Courses you add here stay put when you re-scrape.</p>
+    <div class="row">
+      <input id="ap-code" placeholder="01:640:151" style="width:130px">
+      <select id="ap-term"><option>AP</option><option>Transfer</option><option>IB</option><option>CLEP</option><option>Dual enrollment</option></select>
+      <input id="ap-credits" type="number" min="0" max="12" step="0.5" placeholder="credits" style="width:90px">
+      <button class="primary" id="ap-add">Add</button>
+    </div>
+    <div class="status" id="st-mine"></div>
+    <details id="mine-list" style="border:0;padding:8px 0 0">
+      <summary style="font-weight:400;font-size:13px" id="mine-sum">Show my courses</summary>
+      <div class="tablewrap" style="margin-top:6px"><table><thead><tr><th>Course</th><th>Grade</th><th>Term / source</th><th></th></tr></thead><tbody id="mine-body"></tbody></table></div>
     </details>
   </section>
 
@@ -228,7 +246,7 @@ function drawJob(job) {
   log.scrollTop = log.scrollHeight;
   document.querySelectorAll("[data-run], #soc, #import").forEach(b => b.disabled = busy);
   if (wasHidden || (lastJobState !== job.state && job.state === "error")) box.scrollIntoView({ behavior: "smooth", block: "start" });
-  if (lastJobState && lastJobState !== job.state && !busy) refresh();
+  if (lastJobState && lastJobState !== job.state && !busy) { refresh(); loadMine(); }
   lastJobState = job.state;
 }
 
@@ -354,6 +372,34 @@ async function lookupCourse() {
     box.replaceChildren(...out);
   } catch (e) { box.replaceChildren(el("div", { class: "status bad", text: e.message })); }
 }
+
+async function loadMine() {
+  let r;
+  try { r = await api("/api/courses"); } catch { return; }
+  const ap = r.courses.filter(c => c.transfer).length;
+  $("#mine-sum").textContent = r.courses.length ? `Show my courses (${r.courses.length}, ${ap} AP/transfer)` : "No courses yet";
+  const body = $("#mine-body"); body.replaceChildren();
+  for (const c of r.courses) {
+    const src = c.source === "manual" ? `${c.term || ""} · added by you` : (c.term || "") + (c.transfer && !/ap|transfer|test|ib|clep/i.test(c.term || "") ? " · AP/transfer" : "");
+    const tr = el("tr", {}, el("td", {}, el("span", { class: "chip", text: c.code }), " " + (c.title || "")),
+      el("td", { text: c.grade || "–" }), el("td", { text: src, class: c.transfer ? "good" : "" }), el("td"));
+    if (c.source === "manual") {
+      const b = el("button", { text: "Remove" });
+      b.addEventListener("click", async () => { await api("/api/courses/remove", { code: c.code }); loadMine(); });
+      tr.lastChild.append(b);
+    }
+    body.append(tr);
+  }
+}
+$("#ap-add").addEventListener("click", async () => {
+  try {
+    const r = await api("/api/courses/add", { code: $("#ap-code").value, term: $("#ap-term").value, credits: $("#ap-credits").value });
+    setStatus("#st-mine", `Added ${r.added.code} (${r.added.term}). Run Compare again to see the effect.`, "good");
+    $("#ap-code").value = ""; $("#ap-credits").value = "";
+    loadMine(); refresh();
+  } catch (e) { setStatus("#st-mine", e.message, "bad"); }
+});
+loadMine();
 
 refresh();
 setInterval(() => { if (lastJobState === "running" || lastJobState === "waiting") refresh(); }, 1500);
