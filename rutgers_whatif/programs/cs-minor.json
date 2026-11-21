@@ -1,0 +1,74 @@
+{
+  "id": "cs-minor",
+  "name": "Computer Science minor",
+  "kind": "minor",
+  "school": "SAS",
+  "sources": [
+    "https://www.cs.rutgers.edu/academics/undergraduate/cs-degrees/minor-in-cs"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {
+    "max_d": 1
+  },
+  "default_credits": 4,
+  "notes": [
+    "105, 107, 110, 170, 405 do not count.",
+    "At least five courses must be 01:198 (always true for this list)."
+  ],
+  "requirements": [
+    {
+      "id": "cs-minor-courses",
+      "name": "Six CS courses",
+      "type": "choose",
+      "count": 6,
+      "from": [
+        "01:198:120",
+        "01:198:121",
+        "01:198:122",
+        "01:198:205",
+        "01:198:206",
+        "01:198:210",
+        "01:198:211",
+        "01:198:213",
+        "01:198:214",
+        "01:198:314",
+        "01:198:323",
+        "01:198:324",
+        "01:198:334",
+        "01:198:336",
+        "01:198:344",
+        "01:198:345",
+        "01:198:352",
+        "01:198:411",
+        "01:198:415",
+        "01:198:416",
+        "01:198:417",
+        "01:198:419",
+        "01:198:424",
+        "01:198:425",
+        "01:198:428",
+        "01:198:431",
+        "01:198:437",
+        "01:198:439",
+        "01:198:440",
+        "01:198:442",
+        "01:198:452",
+        "01:198:460",
+        "01:198:461",
+        "01:198:462"
+      ],
+      "credits_each": 4,
+      "label": "CS minor list",
+      "rules": [
+        {
+          "min": 2,
+          "from": [
+            "01:198:3xx",
+            "01:198:4xx"
+          ],
+          "label": "at least two at 300/400 level"
+        }
+      ]
+    }
+  ]
+}

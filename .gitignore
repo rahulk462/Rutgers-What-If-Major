@@ -1,0 +1,24 @@
+# --- secrets: never commit ---
+auth.json
+*.auth.json
+storage_state*.json
+.env
+.env.*
+credentials*
+secrets*
+
+# --- personal data pulled from Degree Navigator (keep local) ---
+data/
+*.sqlite
+*.sqlite3
+*.db
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+build/
+dist/

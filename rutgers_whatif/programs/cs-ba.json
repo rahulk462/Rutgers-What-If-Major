@@ -1,0 +1,136 @@
+{
+  "id": "cs-ba",
+  "name": "Computer Science B.A.",
+  "kind": "major",
+  "school": "SAS",
+  "sources": [
+    "https://www.cs.rutgers.edu/academics/undergraduate/cs-degrees/b-a-degree",
+    "https://www.cs.rutgers.edu/academics/undergraduate/electives"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {
+    "max_d": 1
+  },
+  "default_credits": 4,
+  "notes": [
+    "Admission to the major is required (not checked here).",
+    "Residency: at least seven required + elective courses must be 01:198:xxx (not checked here).",
+    "Electives must be completed within ten years of graduation (not checked here).",
+    "Old 01:198:111/112 count for new 121/122 via equivalents.json."
+  ],
+  "requirements": [
+    {
+      "id": "cs-core",
+      "name": "Six required Computer Science courses",
+      "type": "all",
+      "courses": [
+        "01:198:121",
+        "01:198:122",
+        "01:198:205",
+        "01:198:206",
+        "01:198:211",
+        "01:198:344"
+      ]
+    },
+    {
+      "id": "cs-math",
+      "name": "Three required Mathematics courses",
+      "type": "all",
+      "courses": [
+        "01:640:151",
+        "01:640:152",
+        "01:640:250"
+      ]
+    },
+    {
+      "id": "cs-electives",
+      "name": "5 electives from the designated list",
+      "type": "choose",
+      "count": 5,
+      "label": "CS designated elective list",
+      "from": [
+        "01:198:210",
+        "01:198:213",
+        "01:198:214",
+        "01:198:314",
+        "01:198:323",
+        "01:198:324",
+        "01:198:334",
+        "01:198:336",
+        "01:198:352",
+        "01:198:411",
+        "01:198:416",
+        "01:198:417",
+        "01:198:419",
+        "01:198:424",
+        "01:198:425",
+        "01:198:428",
+        "01:198:431",
+        "01:198:437",
+        "01:198:439",
+        "01:198:440",
+        "01:198:442",
+        "01:198:443",
+        "01:198:444",
+        "01:198:445",
+        "01:198:452",
+        "01:198:460",
+        "01:198:461",
+        "01:198:462",
+        "01:198:493",
+        "01:198:494",
+        "14:332:376",
+        "14:332:423",
+        "14:332:424",
+        "14:332:443",
+        "14:332:451",
+        "14:332:452",
+        "14:332:453",
+        "14:332:456",
+        "14:332:472",
+        "01:640:338",
+        "01:640:348",
+        "01:640:354",
+        "01:640:428",
+        "01:640:454",
+        "01:640:461",
+        "01:730:315",
+        "01:730:407",
+        "01:730:408",
+        "01:730:329",
+        "01:730:424",
+        "01:615:441",
+        "01:960:384",
+        "01:960:463",
+        "01:960:476",
+        "01:960:486"
+      ],
+      "credits_each": 4,
+      "rules": [
+        {
+          "min": 2,
+          "from": [
+            "01:198:3xx",
+            "01:198:4xx"
+          ],
+          "label": "at least two 01:198 courses at 300+ level"
+        },
+        {
+          "min": 3,
+          "from": [
+            "01:198:*"
+          ],
+          "label": "at least 3 taken in the NB CS department"
+        },
+        {
+          "max": 1,
+          "from": [
+            "01:198:493",
+            "01:198:494"
+          ],
+          "label": "at most one independent study"
+        }
+      ]
+    }
+  ]
+}

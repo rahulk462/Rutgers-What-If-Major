@@ -1,0 +1,122 @@
+{
+  "id": "stat-ba",
+  "name": "Statistics major",
+  "kind": "major",
+  "school": "SAS",
+  "sources": [
+    "https://stat.rutgers.edu/majors"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {
+    "max_d": 0
+  },
+  "default_credits": 3,
+  "notes": [
+    "No D grades count toward the major.",
+    "To declare: C average in Calculus I and II (not checked).",
+    "46 credits total."
+  ],
+  "requirements": [
+    {
+      "id": "stat-math",
+      "name": "Calculus I-III and linear algebra",
+      "type": "all",
+      "courses": [
+        "01:640:151",
+        "01:640:152",
+        "01:640:250",
+        "01:640:251"
+      ]
+    },
+    {
+      "id": "stat-math-elective",
+      "name": "One more math course (252 or 300+, not 477/481)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:252",
+        "01:640:3xx",
+        "01:640:4xx"
+      ],
+      "exclude": [
+        "01:640:477",
+        "01:640:481"
+      ]
+    },
+    {
+      "id": "stat-cs",
+      "name": "One computer science course",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:107",
+        "01:198:110",
+        "01:198:111",
+        "01:198:121",
+        "01:198:170"
+      ]
+    },
+    {
+      "id": "stat-prob",
+      "name": "Probability (960:381 or 640:477)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:381",
+        "01:640:477"
+      ]
+    },
+    {
+      "id": "stat-theory",
+      "name": "Statistical theory (960:382 or 640:481)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:382",
+        "01:640:481"
+      ]
+    },
+    {
+      "id": "stat-applied",
+      "name": "960:212 or 384",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:212",
+        "01:960:384"
+      ]
+    },
+    {
+      "id": "stat-computing",
+      "name": "960:295 or 390",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:295",
+        "01:960:390"
+      ]
+    },
+    {
+      "id": "stat-required",
+      "name": "960:463, 486, 490",
+      "type": "all",
+      "courses": [
+        "01:960:463",
+        "01:960:486",
+        "01:960:490"
+      ]
+    },
+    {
+      "id": "stat-electives",
+      "name": "Two of 960:365, 467, 476, 483",
+      "type": "choose",
+      "count": 2,
+      "from": [
+        "01:960:365",
+        "01:960:467",
+        "01:960:476",
+        "01:960:483"
+      ]
+    }
+  ]
+}
