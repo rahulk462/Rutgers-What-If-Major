@@ -56,3 +56,15 @@ def test_manual_ap_survives_rescrape_and_counts(data_dir):
 def test_manual_rejects_bad_code(data_dir):
     with pytest.raises(ValueError):
         storage.add_manual("calc")
+
+
+def test_add_ap_exam(data_dir):
+    added = storage.add_ap_exam("Calculus BC", 5)
+    assert [c.code for c in added] == ["01:640:151", "01:640:152"] and all(c.transfer for c in added)
+    assert storage.add_ap_exam("computer science a", 4)[0].code == "01:198:110"
+    with pytest.raises(ValueError):
+        storage.add_ap_exam("Calculus AB", 3)
+    with pytest.raises(ValueError):
+        storage.add_ap_exam("Underwater Basket Weaving", 5)
+    codes = {c.code for c in storage.load_courses()}
+    assert {"01:640:151", "01:640:152", "01:198:110"} <= codes

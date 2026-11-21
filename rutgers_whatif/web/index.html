@@ -116,12 +116,20 @@ summary { cursor: pointer; font-weight: 600; }
 
   <section id="mine">
     <h2><span class="n">+</span>Your courses &amp; AP credit</h2>
-    <p class="hint">AP, test and transfer credit counts as completed. If any is missing, add the <strong>Rutgers course it counts as</strong> (shown in Degree Navigator or on your transcript, e.g. AP Calculus BC might show as 01:640:151 and 01:640:152). Courses you add here stay put when you re-scrape.</p>
+    <p class="hint">AP, test and transfer credit counts as completed. If yours is missing, add it here. It stays put when you re-scrape.</p>
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px">Add an AP exam</div>
+    <select id="ap-exam" style="width:100%;margin-bottom:8px"></select>
+    <div class="row">
+      <select id="ap-score"><option value="5">Score 5</option><option value="4">Score 4</option><option value="3">Score 3 or lower</option></select>
+      <button class="primary" id="ap-exam-add">Add</button>
+    </div>
+    <div class="status" id="ap-preview" style="margin-top:4px"></div>
+    <div style="font-size:13px;font-weight:600;margin:10px 0 4px">Or add any course by code</div>
     <div class="row">
       <input id="ap-code" placeholder="01:640:151" style="width:130px">
       <select id="ap-term"><option>AP</option><option>Transfer</option><option>IB</option><option>CLEP</option><option>Dual enrollment</option></select>
       <input id="ap-credits" type="number" min="0" max="12" step="0.5" placeholder="credits" style="width:90px">
-      <button class="primary" id="ap-add">Add</button>
+      <button id="ap-add">Add</button>
     </div>
     <div class="status" id="st-mine"></div>
     <details id="mine-list" style="border:0;padding:8px 0 0">
@@ -400,6 +408,31 @@ $("#ap-add").addEventListener("click", async () => {
   } catch (e) { setStatus("#st-mine", e.message, "bad"); }
 });
 loadMine();
+
+let AP = null;
+async function loadAP() {
+  try { AP = await api("/api/ap-exams"); } catch { return; }
+  const sel = $("#ap-exam");
+  sel.replaceChildren(...AP.exams.map(e => el("option", { value: e.exam, text: "AP " + e.exam })));
+  sel.addEventListener("change", previewAP); $("#ap-score").addEventListener("change", previewAP);
+  previewAP();
+}
+function previewAP() {
+  const e = AP && AP.exams.find(x => x.exam === $("#ap-exam").value);
+  if (!e) return;
+  const got = e.awards[$("#ap-score").value];
+  setStatus("#ap-preview", got ? `Counts as ${got.join(", ")} (${e.credits[$("#ap-score").value]} credits).${e.note ? " " + e.note : ""}`
+                               : "SAS gives no credit for a score of 3 or lower.", got ? "" : "warn");
+  $("#ap-exam-add").disabled = !got;
+}
+$("#ap-exam-add").addEventListener("click", async () => {
+  try {
+    const r = await api("/api/courses/add-ap", { exam: $("#ap-exam").value, score: Number($("#ap-score").value) });
+    setStatus("#st-mine", `Added ${r.added.map(c => c.code).join(", ")}. Run Compare again to see the effect.`, "good");
+    loadMine(); refresh();
+  } catch (e) { setStatus("#st-mine", e.message, "bad"); }
+});
+loadAP();
 
 refresh();
 setInterval(() => { if (lastJobState === "running" || lastJobState === "waiting") refresh(); }, 1500);

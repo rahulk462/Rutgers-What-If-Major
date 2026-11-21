@@ -1,0 +1,281 @@
+{
+  "source": "https://sasundergrad.rutgers.edu/majors-and-core-curriculum/credits/pre-college-credits/pre-college-credits-list/ap",
+  "retrieved": "2026-11-21",
+  "school": "SAS (New Brunswick)",
+  "note": "Scores of 4 and 5 only. The SAS page's course codes are copied exactly; exam names were matched to them by the course each one awards. Degree Navigator is the final word on what you actually received. Exams not listed here: use 'Add a course' with the code from Degree Navigator or your transcript.",
+  "exams": [
+    {
+      "exam": "Calculus AB",
+      "awards": {
+        "4": [
+          "01:640:135"
+        ],
+        "5": [
+          "01:640:151"
+        ]
+      },
+      "credits": {
+        "4": 4,
+        "5": 4
+      }
+    },
+    {
+      "exam": "Calculus BC",
+      "awards": {
+        "4": [
+          "01:640:151",
+          "01:640:152"
+        ],
+        "5": [
+          "01:640:151",
+          "01:640:152"
+        ]
+      },
+      "credits": {
+        "4": 8,
+        "5": 8
+      },
+      "note": "If your BC score is below 4, an AB subscore of 5 gives 01:640:151 and 4 gives 01:640:135; use Calculus AB with your subscore."
+    },
+    {
+      "exam": "Precalculus",
+      "awards": {
+        "4": [
+          "01:640:115"
+        ],
+        "5": [
+          "01:640:115"
+        ]
+      },
+      "credits": {
+        "4": 4,
+        "5": 4
+      }
+    },
+    {
+      "exam": "Statistics",
+      "awards": {
+        "4": [
+          "01:960:211"
+        ],
+        "5": [
+          "01:960:211"
+        ]
+      },
+      "credits": {
+        "4": 3,
+        "5": 3
+      }
+    },
+    {
+      "exam": "Computer Science A",
+      "awards": {
+        "4": [
+          "01:198:110"
+        ],
+        "5": [
+          "01:198:111"
+        ]
+      },
+      "credits": {
+        "4": 3,
+        "5": 4
+      }
+    },
+    {
+      "exam": "Computer Science Principles",
+      "awards": {
+        "4": [
+          "01:198:110"
+        ],
+        "5": [
+          "01:198:110"
+        ]
+      },
+      "credits": {
+        "4": 3,
+        "5": 3
+      }
+    },
+    {
+      "exam": "Chemistry",
+      "awards": {
+        "4": [
+          "01:160:161",
+          "01:160:171"
+        ],
+        "5": [
+          "01:160:161",
+          "01:160:162",
+          "01:160:171"
+        ]
+      },
+      "credits": {
+        "4": 5,
+        "5": 9
+      }
+    },
+    {
+      "exam": "Biology",
+      "awards": {
+        "4": [
+          "01:119:115",
+          "01:119:116",
+          "01:119:117"
+        ],
+        "5": [
+          "01:119:115",
+          "01:119:116",
+          "01:119:117"
+        ]
+      },
+      "credits": {
+        "4": 10,
+        "5": 10
+      }
+    },
+    {
+      "exam": "Physics 1",
+      "awards": {
+        "4": [
+          "01:750:203",
+          "01:750:205"
+        ],
+        "5": [
+          "01:750:203",
+          "01:750:205"
+        ]
+      },
+      "credits": {
+        "4": 4,
+        "5": 4
+      }
+    },
+    {
+      "exam": "Physics 2",
+      "awards": {
+        "4": [
+          "01:750:204",
+          "01:750:206"
+        ],
+        "5": [
+          "01:750:204",
+          "01:750:206"
+        ]
+      },
+      "credits": {
+        "4": 4,
+        "5": 4
+      }
+    },
+    {
+      "exam": "Physics C: Mechanics",
+      "awards": {
+        "4": [
+          "01:750:203",
+          "01:750:205"
+        ],
+        "5": [
+          "01:750:203",
+          "01:750:205"
+        ]
+      },
+      "credits": {
+        "4": 4,
+        "5": 4
+      }
+    },
+    {
+      "exam": "Physics C: Electricity and Magnetism",
+      "awards": {
+        "4": [
+          "01:750:204",
+          "01:750:206"
+        ],
+        "5": [
+          "01:750:204",
+          "01:750:206"
+        ]
+      },
+      "credits": {
+        "4": 4,
+        "5": 4
+      }
+    },
+    {
+      "exam": "English Language and Composition",
+      "awards": {
+        "4": [
+          "01:355:101"
+        ],
+        "5": [
+          "01:355:101"
+        ]
+      },
+      "credits": {
+        "4": 3,
+        "5": 3
+      }
+    },
+    {
+      "exam": "English Literature and Composition",
+      "awards": {
+        "4": [
+          "01:355:101"
+        ],
+        "5": [
+          "01:355:101"
+        ]
+      },
+      "credits": {
+        "4": 3,
+        "5": 3
+      }
+    },
+    {
+      "exam": "Microeconomics",
+      "awards": {
+        "4": [
+          "01:220:102"
+        ],
+        "5": [
+          "01:220:102"
+        ]
+      },
+      "credits": {
+        "4": 3,
+        "5": 3
+      }
+    },
+    {
+      "exam": "Macroeconomics",
+      "awards": {
+        "4": [
+          "01:220:103"
+        ],
+        "5": [
+          "01:220:103"
+        ]
+      },
+      "credits": {
+        "4": 3,
+        "5": 3
+      }
+    },
+    {
+      "exam": "Psychology",
+      "awards": {
+        "4": [
+          "01:830:101"
+        ],
+        "5": [
+          "01:830:101"
+        ]
+      },
+      "credits": {
+        "4": 3,
+        "5": 3
+      }
+    }
+  ]
+}

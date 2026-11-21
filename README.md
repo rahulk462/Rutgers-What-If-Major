@@ -94,6 +94,7 @@ course each one counts as. These hand-added courses live in
 `data/manual_courses.json` and survive re-scraping:
 
 ```bash
+python -m rutgers_whatif add-ap "Calculus BC" 5        # by exam + score (SAS table); no args lists exams
 python -m rutgers_whatif add-course 01:640:151 --term AP --credits 4
 python -m rutgers_whatif courses                 # list everything the tool counts
 python -m rutgers_whatif remove-course 01:640:151
