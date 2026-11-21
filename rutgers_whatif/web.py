@@ -220,6 +220,19 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, PAGE.read_bytes(), "text/html; charset=utf-8")
             if url.path == "/api/status":
                 return self._json(200, status())
+            if url.path == "/api/courses":
+                from . import soc, storage
+                cat = soc.load_index()
+                try:
+                    courses = storage.load_courses()
+                except FileNotFoundError:
+                    courses = []
+                rows = []
+                for c in sorted(courses, key=lambda c: (not c.transfer, c.code)):
+                    d = c.to_dict()
+                    d["title"] = d["title"] or (cat.get(c.code) or {}).get("title", "")
+                    rows.append(d)
+                return self._json(200, {"courses": rows})
             if url.path in ("/api/course", "/api/search"):
                 from . import lookup, soc, storage, whatif
                 from .requirements import load_programs
@@ -258,6 +271,18 @@ class Handler(BaseHTTPRequestHandler):
         except json.JSONDecodeError:
             return self._json(400, {"error": "bad json"})
         path = urlparse(self.path).path
+        if path in ("/api/courses/add", "/api/courses/remove"):
+            from . import storage
+            try:
+                if path.endswith("add"):
+                    cr = body.get("credits")
+                    c = storage.add_manual(str(body.get("code", "")), grade=str(body.get("grade") or "T"),
+                                           credits=float(cr) if cr not in (None, "") else None,
+                                           term=str(body.get("term") or "AP"), title=str(body.get("title") or ""))
+                    return self._json(200, {"added": c.to_dict()})
+                return self._json(200, {"removed": storage.remove_manual(str(body.get("code", "")))})
+            except ValueError as e:
+                return self._json(400, {"error": str(e)})
         if path == "/api/done":
             return self._json(200, {"released": JOBS.release()})
         if path.startswith("/api/run/"):

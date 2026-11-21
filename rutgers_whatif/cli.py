@@ -52,6 +52,33 @@ def _cmd_import(a):
     print(f"Imported {len(courses)} courses -> {config.AUDIT_JSON}")
 
 
+def _cmd_courses(a):
+    from . import storage
+    try:
+        courses = storage.load_courses()
+    except FileNotFoundError as e:
+        print(e)
+        return 1
+    for c in sorted(courses, key=lambda c: c.code):
+        tag = " [AP/transfer]" if c.transfer else ""
+        tag += " [added by hand]" if c.source == "manual" else ""
+        print(f"{c.code}  {c.grade or '-':<3} {c.term or '':<14} {c.title}{tag}")
+    print(f"{len(courses)} courses ({sum(c.transfer for c in courses)} AP/transfer)")
+    return 0
+
+
+def _cmd_add_course(a):
+    from . import storage
+    c = storage.add_manual(a.code, grade=a.grade, credits=a.credits, title=a.title or "", term=a.term)
+    print(f"Added {c.code} ({c.term}, grade {c.grade}). It counts as completed in every comparison.")
+
+
+def _cmd_remove_course(a):
+    from . import storage
+    n = storage.remove_manual(a.code)
+    print(f"Removed {n} hand-added entr{'y' if n == 1 else 'ies'} for {a.code}.")
+
+
 def _cmd_soc(a):
     from . import soc
     terms = a.term or ["spring", "fall"]
@@ -128,6 +155,17 @@ def build_parser() -> argparse.ArgumentParser:
     s = sub.add_parser("import-courses", help="load courses from a CSV/JSON instead of scraping")
     s.add_argument("file")
     s.set_defaults(f=_cmd_import)
+    sub.add_parser("courses", help="list the courses the tool knows you've taken").set_defaults(f=_cmd_courses)
+    s = sub.add_parser("add-course", help="add AP / test / transfer credit by hand (survives re-scraping)")
+    s.add_argument("code", help="Rutgers equivalent, e.g. 01:640:151")
+    s.add_argument("--term", default="AP", help='where it came from, e.g. "AP", "Transfer" (default AP)')
+    s.add_argument("--grade", default="T")
+    s.add_argument("--credits", type=float)
+    s.add_argument("--title")
+    s.set_defaults(f=_cmd_add_course)
+    s = sub.add_parser("remove-course", help="remove a course you added by hand")
+    s.add_argument("code")
+    s.set_defaults(f=_cmd_remove_course)
     s = sub.add_parser("soc", help="download public Schedule of Classes data")
     s.add_argument("--year", type=int, required=True)
     s.add_argument("--term", action="append", help="spring/summer/fall/winter or 0/1/7/9 (repeatable)")

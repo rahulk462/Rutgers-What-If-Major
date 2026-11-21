@@ -16,6 +16,12 @@ IN_PROGRESS = {"", "IP", "PR", "TBA", "*", "-", "CURRENT", "IN PROGRESS", "REG",
 
 GRADE_TOKEN_RE = re.compile(r"^(A|B\+|B|C\+|C|D|F|P|PA|S|U|W|NC|T|TR|TZ|CR|INC|IP|PR)$")
 
+# Text that marks a row as AP / test / transfer credit rather than a Rutgers class.
+TRANSFER_RE = re.compile(
+    r"\b(AP|A\.P\.|advanced\s+placement|transfer(?:red)?|test\s+credit|credit\s+by\s+exam(?:ination)?|"
+    r"exam\s+credit|IB|international\s+baccalaureate|CLEP|dual\s+enrollment|TR|TZ)\b", re.I)
+TRANSFER_GRADES = {"T", "TR", "TZ", "CR"}
+
 TERM_NAMES = {"0": "Winter", "1": "Spring", "7": "Summer", "9": "Fall"}
 TERM_RE = re.compile(
     r"\b(?:(Fall|Spring|Summer|Winter)\s*(\d{4})|(\d{4})\s*(Fall|Spring|Summer|Winter)|(\d{4})\s*([0179])\b)",
@@ -100,6 +106,13 @@ class TakenCourse:
     grade: str = ""
     term: str | None = None
     source: str = "degree_navigator"
+    transfer: bool = False          # AP / test / transfer credit
+
+    def __post_init__(self):
+        if normalize_grade(self.grade) in TRANSFER_GRADES:
+            self.transfer = True
+        if self.transfer and not normalize_grade(self.grade):
+            self.grade = "T"        # credit already earned; never "in progress"
 
     @property
     def status(self) -> str:
@@ -114,7 +127,8 @@ class TakenCourse:
     def from_dict(cls, d: dict) -> "TakenCourse":
         return cls(code=normalize_code(d["code"]) or d["code"], title=d.get("title", ""),
                    credits=d.get("credits"), grade=d.get("grade", "") or "",
-                   term=d.get("term"), source=d.get("source", "import"))
+                   term=d.get("term"), source=d.get("source", "import"),
+                   transfer=bool(d.get("transfer")) or bool(TRANSFER_RE.search(str(d.get("term") or ""))))
 
 
 @dataclass
