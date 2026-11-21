@@ -1,0 +1,115 @@
+{
+  "id": "ds-bs-econ",
+  "name": "Data Science B.S. (Economics track)",
+  "kind": "major",
+  "school": "SAS",
+  "sources": [
+    "https://ds.sas.rutgers.edu/data-science-program/b-s-in-data-science"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {},
+  "default_credits": 3,
+  "notes": [
+    "Track code NB219EJ.",
+    "Condensed from the Data Science Program site, which says information is subject to change: check with a Data Science advisor.",
+    "Data in Context 04:189:220 is now listed as 04:547:225; either counts.",
+    "To declare: Data 101 and Statistical Inference (or an equivalent) must be done. SAS Core is also required and not modeled.",
+    "The site gives no total credit count or grade rule for the major."
+  ],
+  "requirements": [
+    {
+      "id": "ds-bs-econ-data101",
+      "name": "Data 101 (198:142 / 960:142)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:142",
+        "01:960:142"
+      ]
+    },
+    {
+      "id": "ds-bs-econ-inference",
+      "name": "Statistical inference (960:291, 212, 384 or 33:136:385)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:291",
+        "01:960:212",
+        "01:960:384",
+        "33:136:385"
+      ]
+    },
+    {
+      "id": "ds-bs-econ-datamgmt",
+      "name": "Data management (198:210, 960:295 or 04:547:221)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:210",
+        "01:960:295",
+        "04:547:221"
+      ]
+    },
+    {
+      "id": "ds-bs-econ-calc1",
+      "name": "Calculus I (640:135 or 151)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:151",
+        "01:640:135"
+      ]
+    },
+    {
+      "id": "ds-bs-econ-linalg",
+      "name": "Linear algebra (640:250)",
+      "type": "all",
+      "courses": [
+        "01:640:250"
+      ]
+    },
+    {
+      "id": "ds-bs-econ-context",
+      "name": "Data in Context (04:547:225, was 04:189:220)",
+      "type": "all",
+      "courses": [
+        "04:547:225"
+      ]
+    },
+    {
+      "id": "ds-bs-econ-calc2",
+      "name": "Calculus II (640:152, or 136)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:152",
+        "01:640:136"
+      ]
+    },
+    {
+      "id": "ds-bs-econ-track",
+      "name": "Economics track courses",
+      "type": "all",
+      "courses": [
+        "04:547:321",
+        "01:220:102",
+        "01:220:103",
+        "01:220:320",
+        "01:220:321",
+        "01:220:322",
+        "01:220:421",
+        "01:220:424"
+      ]
+    },
+    {
+      "id": "ds-bs-econ-econ",
+      "name": "220:422 or 220:423",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:220:422",
+        "01:220:423"
+      ]
+    }
+  ]
+}

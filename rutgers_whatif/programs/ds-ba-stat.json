@@ -1,0 +1,112 @@
+{
+  "id": "ds-ba-stat",
+  "name": "Data Science B.A. (Statistics track)",
+  "kind": "major",
+  "school": "SAS",
+  "sources": [
+    "https://ds.sas.rutgers.edu/data-science-program/b-a-in-data-science"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {},
+  "default_credits": 3,
+  "notes": [
+    "Track code NB219TJ.",
+    "Condensed from the Data Science Program site, which says information is subject to change: check with a Data Science advisor.",
+    "Data in Context 04:189:220 is now listed as 04:547:225; either counts.",
+    "To declare: Data 101 and Statistical Inference (or an equivalent) must be done. SAS Core is also required and not modeled.",
+    "The site gives no total credit count or grade rule for the major."
+  ],
+  "requirements": [
+    {
+      "id": "ds-ba-stat-data101",
+      "name": "Data 101 (198:142 / 960:142)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:142",
+        "01:960:142"
+      ]
+    },
+    {
+      "id": "ds-ba-stat-inference",
+      "name": "Statistical inference (960:291, 212, 384 or 33:136:385)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:291",
+        "01:960:212",
+        "01:960:384",
+        "33:136:385"
+      ]
+    },
+    {
+      "id": "ds-ba-stat-datamgmt",
+      "name": "Data management (198:210, 960:295 or 04:547:221)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:210",
+        "01:960:295",
+        "04:547:221"
+      ]
+    },
+    {
+      "id": "ds-ba-stat-calc1",
+      "name": "Calculus I (640:135 or 151)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:151",
+        "01:640:135"
+      ]
+    },
+    {
+      "id": "ds-ba-stat-linalg",
+      "name": "Linear algebra (640:250)",
+      "type": "all",
+      "courses": [
+        "01:640:250"
+      ]
+    },
+    {
+      "id": "ds-ba-stat-context",
+      "name": "Data in Context (04:547:225, was 04:189:220)",
+      "type": "all",
+      "courses": [
+        "04:547:225"
+      ]
+    },
+    {
+      "id": "ds-ba-stat-calc2",
+      "name": "Calculus II (640:152, or 136)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:152",
+        "01:640:136"
+      ]
+    },
+    {
+      "id": "ds-ba-stat-track",
+      "name": "Statistics track courses",
+      "type": "all",
+      "courses": [
+        "01:198:111",
+        "01:198:112",
+        "01:960:463",
+        "01:960:486"
+      ]
+    },
+    {
+      "id": "ds-ba-stat-elective",
+      "name": "960:365, 467 or 490",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:365",
+        "01:960:467",
+        "01:960:490"
+      ]
+    }
+  ]
+}

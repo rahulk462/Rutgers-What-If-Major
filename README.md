@@ -132,8 +132,11 @@ The SQLite file keeps every scrape as a snapshot (`snapshots`, `courses`,
 * Program definitions live in `rutgers_whatif/programs/*.json`, condensed from
   the department requirement pages (sources and retrieval date are in each
   file). They currently cover the CS B.S., CS B.A., CS minor, Math major
-  (Option A), Math minor, Statistics major, Statistics/Math joint major, and
-  Statistics minor.
+  (Option A), Math minor, Statistics major, Statistics/Math joint major,
+  Statistics minor, and Data Science (B.S. tracks: CS `ds-bs-cs`, Economics
+  `ds-bs-econ`, Chemical `ds-bs-chem`; B.A. tracks: Statistics `ds-ba-stat`,
+  Societal Impact `ds-ba-societal`; and the minor `ds-minor`). Each Data
+  Science track is its own program, so compare the tracks side by side.
 * Requirement types: `all` (every listed course), `choose` (N from a list or
   wildcard like `01:640:3xx`, with rules such as "at least 2 at 300+" or "at
   most 1 independent study"), and `one_set` (finish any one sequence).

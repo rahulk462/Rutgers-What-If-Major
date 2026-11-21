@@ -1,0 +1,120 @@
+{
+  "id": "ds-minor",
+  "name": "Data Science minor",
+  "kind": "minor",
+  "school": "SAS",
+  "sources": [
+    "https://ds.sas.rutgers.edu/data-science-program/data-science-program-minor"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {
+    "max_d": 0
+  },
+  "default_credits": 3,
+  "notes": [
+    "Six courses. No D grades, and a 2.0 GPA in minor courses (GPA not checked).",
+    "No capstone needed since April 1, 2025.",
+    "To declare: Data 101 with a C or better.",
+    "Societal Impact track: 04:547:321 and 04:547:225 can't also be the domain course.",
+    "Domain course subject codes other than CS 439, Econ 322 and the 04:547 / 960 courses were filled in by the tool. English, Psychology and SEBS Biotech options are not matched automatically.",
+    "Information is subject to change: check with a Data Science advisor."
+  ],
+  "requirements": [
+    {
+      "id": "dsm-data101",
+      "name": "Data 101 (198:142 / 960:142)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:142",
+        "01:960:142"
+      ]
+    },
+    {
+      "id": "dsm-inference",
+      "name": "Statistical inference (960:291, 212, 384 or 33:136:385)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:291",
+        "01:960:212",
+        "01:960:384",
+        "33:136:385"
+      ]
+    },
+    {
+      "id": "dsm-datamgmt",
+      "name": "Data management (198:210, 960:295 or 04:547:221)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:210",
+        "01:960:295",
+        "04:547:221"
+      ]
+    },
+    {
+      "id": "dsm-track",
+      "name": "One track (CS, Statistics, Economics or Societal Impact)",
+      "type": "one_set",
+      "sets": [
+        [
+          "01:960:463",
+          "01:198:461"
+        ],
+        [
+          "01:960:463",
+          "01:198:462"
+        ],
+        [
+          "01:960:486",
+          "04:547:321"
+        ],
+        [
+          "01:960:486",
+          "04:547:225"
+        ],
+        [
+          "01:960:486",
+          "01:960:463"
+        ],
+        [
+          "01:220:424",
+          "04:547:321"
+        ],
+        [
+          "01:220:424",
+          "04:547:225"
+        ],
+        [
+          "04:547:321",
+          "04:547:225"
+        ]
+      ]
+    },
+    {
+      "id": "dsm-domain",
+      "name": "One domain course",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:439",
+        "01:220:322",
+        "01:447:303",
+        "01:450:320",
+        "01:450:321",
+        "01:450:330",
+        "01:750:345",
+        "01:790:391",
+        "01:920:360",
+        "14:332:443",
+        "04:547:321",
+        "04:547:225",
+        "01:960:365",
+        "01:960:463",
+        "01:960:486"
+      ],
+      "label": "CS 439, Econ 322, 04:547:321, 04:547:225, Stat 365/463/486, Genetics 303, Geography 320/321/330, Physics 345, Poli Sci 391, Sociology 360, ECE 443 (or English 207, Psych 202/203, Biotech 486 by hand)"
+    }
+  ]
+}
