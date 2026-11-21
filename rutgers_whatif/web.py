@@ -220,6 +220,22 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, PAGE.read_bytes(), "text/html; charset=utf-8")
             if url.path == "/api/status":
                 return self._json(200, status())
+            if url.path in ("/api/course", "/api/search"):
+                from . import lookup, soc, storage, whatif
+                from .requirements import load_programs
+                q = parse_qs(url.query)
+                cat = soc.load_index()
+                if url.path == "/api/search":
+                    return self._json(200, {"results": lookup.search((q.get("q") or [""])[0], cat),
+                                            "have_soc": bool(cat)})
+                try:
+                    passed = whatif.passed_codes(storage.load_courses())
+                except FileNotFoundError:
+                    passed = set()
+                d = lookup.describe((q.get("code") or [""])[0], cat, load_programs(), passed)
+                d["have_courses"] = config.AUDIT_JSON.exists()
+                d["have_soc"] = bool(cat)
+                return self._json(200, d)
             if url.path == "/api/whatif":
                 q = parse_qs(url.query)
                 progs = [p for v in q.get("programs", []) for p in v.split(",") if p]

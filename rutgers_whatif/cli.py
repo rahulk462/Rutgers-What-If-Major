@@ -85,18 +85,28 @@ def _cmd_whatif(a):
 
 
 def _cmd_prereq(a):
-    from . import prereqs, soc, storage, whatif
+    from . import lookup, soc, storage, whatif
+    from .requirements import load_programs
     cat = soc.load_index()
-    if a.code not in cat:
-        print(f"{a.code} not in cached SOC data. Run `soc` first.")
-        return 1
-    tree = prereqs.parse(cat[a.code].get("preReqNotes") or "")
-    print(f"{a.code} {cat[a.code]['title']}\n  prerequisites: {prereqs.to_text(tree)}")
     try:
         passed = whatif.passed_codes(storage.load_courses())
-        print(f"  you meet them: {'yes' if prereqs.satisfied(tree, passed) else 'no'}")
     except FileNotFoundError:
-        pass
+        passed = set()
+        print("(No courses loaded yet, so this assumes you haven't taken anything.)")
+    d = lookup.describe(a.code, cat, load_programs(), passed)
+    if not d["known"]:
+        print(f"{d['code']} isn't in the downloaded Schedule of Classes data. Run `soc` for a recent term first.")
+    print(f"{d['code']} {d['title']}".rstrip())
+    print(f"  prerequisites: {d['prereqs']}")
+    print("  you've taken it" if d["taken"] else f"  you can take it now: {'yes' if d['ready'] else 'no'}")
+    if d["path"]:
+        print("  take these first (in order):")
+        for step in d["path"]:
+            print(f"    {step['code']} {step['title']}".rstrip() + ("" if step["ready"] else "  (has its own prereqs above)"))
+    if d["counts_toward"]:
+        print("  counts toward:")
+        for c in d["counts_toward"]:
+            print(f"    {c['program_name']}: {c['requirement']}")
     return 0
 
 
@@ -131,7 +141,8 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--courses", help="use this CSV/JSON of courses instead of data/audit.json")
     s.add_argument("--json", action="store_true")
     s.set_defaults(f=_cmd_whatif)
-    s = sub.add_parser("prereq", help="show a course's prerequisites and whether you meet them")
+    s = sub.add_parser("prereq", aliases=["course"],
+                       help="what you need before a course, and which programs it counts toward")
     s.add_argument("code")
     s.set_defaults(f=_cmd_prereq)
     s = sub.add_parser("serve", help="run the local web page at http://127.0.0.1:8000")
