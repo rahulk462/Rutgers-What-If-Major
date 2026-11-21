@@ -73,7 +73,8 @@ python -m rutgers_whatif soc --year 2027 --term spring
 
 # 5. Compare programs
 python -m rutgers_whatif programs           # list the defined programs
-python -m rutgers_whatif whatif cs-ba math-minor stat-ba --current cs-bs
+python -m rutgers_whatif whatif cs-ba math-minor stat-ba --current cs-bs   # if you're in CS B.S.
+python -m rutgers_whatif whatif               # undeclared: every program, closest first
 python -m rutgers_whatif whatif --current cs-bs --json > data/whatif.json
 python -m rutgers_whatif prereq 01:198:344  # prereqs for one course, and whether you meet them
 ```

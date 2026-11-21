@@ -130,7 +130,7 @@ summary { cursor: pointer; font-weight: 600; }
   <section id="right">
     <h2><span class="n">5</span>What if…</h2>
     <p class="hint">Choose your current program(s), then the ones you're considering.</p>
-    <div><strong style="font-size:13px">I'm currently in</strong><div class="progs" id="cur"></div></div>
+    <div><strong style="font-size:13px">I'm currently in</strong> <span class="hint" style="font-size:12px">(leave all unchecked if you're undeclared)</span><div class="progs" id="cur"></div></div>
     <div><strong style="font-size:13px">Compare</strong><div class="progs" id="cmp"></div></div>
     <div class="row"><button class="primary" id="run">Compare</button><span class="status" id="st-whatif" style="margin:0"></span></div>
     <div id="results"></div>
@@ -165,7 +165,7 @@ let programsDrawn = false, lastJobState = null;
 function drawPrograms(programs) {
   if (programsDrawn) return;
   programsDrawn = true;
-  const cur = store.get("current", ["cs-bs"]), cmp = store.get("compare", programs.map(p => p.id));
+  const cur = store.get("current", []), cmp = store.get("compare", programs.map(p => p.id));
   for (const [box, sel, key] of [[$("#cur"), cur, "current"], [$("#cmp"), cmp, "compare"]]) {
     for (const p of programs) {
       const cb = el("input", { type: "checkbox", value: p.id });
