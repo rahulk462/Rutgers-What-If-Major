@@ -1,0 +1,197 @@
+{
+  "id": "ds-bs-chem",
+  "name": "Data Science B.S. (Chemical Data Science track)",
+  "kind": "major",
+  "school": "SAS",
+  "sources": [
+    "https://ds.sas.rutgers.edu/data-science-program/b-s-in-data-science"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {},
+  "default_credits": 3,
+  "notes": [
+    "Track code NB219CJ.",
+    "160:487 can also be taken as the graduate 160:542.",
+    "The 9-credit elective rule is approximated as three courses; 160:309, 352 and 353 are under 3 credits, so you may need a fourth.",
+    "Condensed from the Data Science Program site, which says information is subject to change: check with a Data Science advisor.",
+    "Data in Context 04:189:220 is now listed as 04:547:225; either counts.",
+    "To declare: Data 101 and Statistical Inference (or an equivalent) must be done. SAS Core is also required and not modeled.",
+    "The site gives no total credit count or grade rule for the major."
+  ],
+  "requirements": [
+    {
+      "id": "ds-bs-chem-data101",
+      "name": "Data 101 (198:142 / 960:142)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:142",
+        "01:960:142"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-inference",
+      "name": "Statistical inference (960:291, 212, 384 or 33:136:385)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:291",
+        "01:960:212",
+        "01:960:384",
+        "33:136:385"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-datamgmt",
+      "name": "Data management (198:210, 960:295 or 04:547:221)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:210",
+        "01:960:295",
+        "04:547:221"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-calc1",
+      "name": "Calculus I (640:135 or 151)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:151",
+        "01:640:135"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-linalg",
+      "name": "Linear algebra (640:250)",
+      "type": "all",
+      "courses": [
+        "01:640:250"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-context",
+      "name": "Data in Context (04:547:225, was 04:189:220)",
+      "type": "all",
+      "courses": [
+        "04:547:225"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-track",
+      "name": "Chemical DS track courses",
+      "type": "all",
+      "courses": [
+        "01:640:152",
+        "01:198:111",
+        "01:160:171",
+        "01:160:487"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-stat",
+      "name": "960:365 or 960:463",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:365",
+        "01:960:463"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-gen1",
+      "name": "General chemistry I (160:161, 159, 163 or 165)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:160:161",
+        "01:160:159",
+        "01:160:163",
+        "01:160:165"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-gen2",
+      "name": "General chemistry II (160:162, 160, 164 or 166)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:160:162",
+        "01:160:160",
+        "01:160:164",
+        "01:160:166"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-org1",
+      "name": "Organic chemistry I (160:307 or 315)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:160:307",
+        "01:160:315"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-org2",
+      "name": "Organic chemistry II (160:308 or 316)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:160:308",
+        "01:160:316"
+      ]
+    },
+    {
+      "id": "ds-bs-chem-electives",
+      "name": "At least 9 credits of chemistry electives",
+      "type": "choose",
+      "count": 3,
+      "from": [
+        "01:160:251",
+        "01:160:309",
+        "01:160:348",
+        "01:160:351",
+        "01:160:352",
+        "01:160:353",
+        "01:160:327",
+        "01:160:341",
+        "01:160:328",
+        "01:160:342",
+        "01:160:438",
+        "01:694:407",
+        "11:115:403"
+      ],
+      "credits_each": 3,
+      "label": "160:251, 309, 348, 351, 352, 353, 327/341, 328/342/438, 694:407 or 11:115:403",
+      "rules": [
+        {
+          "max": 1,
+          "from": [
+            "01:160:327",
+            "01:160:341"
+          ],
+          "label": "one of 327/341"
+        },
+        {
+          "max": 1,
+          "from": [
+            "01:160:328",
+            "01:160:342",
+            "01:160:438"
+          ],
+          "label": "one of 328/342/438"
+        },
+        {
+          "max": 1,
+          "from": [
+            "01:694:407",
+            "11:115:403"
+          ],
+          "label": "only one of 694:407 / 11:115:403"
+        }
+      ]
+    }
+  ]
+}

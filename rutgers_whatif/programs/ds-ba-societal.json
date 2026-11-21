@@ -1,0 +1,127 @@
+{
+  "id": "ds-ba-societal",
+  "name": "Data Science B.A. (Societal Impact track)",
+  "kind": "major",
+  "school": "SAS",
+  "sources": [
+    "https://ds.sas.rutgers.edu/data-science-program/b-a-in-data-science"
+  ],
+  "retrieved": "2026-11-21",
+  "grade_policy": {},
+  "default_credits": 3,
+  "notes": [
+    "Track code NB219IJ.",
+    "A course cannot count for two requirements.",
+    "Domain course subject codes other than CS 439 and Econ 322 were filled in by the tool, not the site. English 207 and SEBS Biotech 485 are not matched automatically; add them by hand if you take them.",
+    "Some domain options have their own capstone (default 198:310); this is not modeled.",
+    "Condensed from the Data Science Program site, which says information is subject to change: check with a Data Science advisor.",
+    "Data in Context 04:189:220 is now listed as 04:547:225; either counts.",
+    "To declare: Data 101 and Statistical Inference (or an equivalent) must be done. SAS Core is also required and not modeled.",
+    "The site gives no total credit count or grade rule for the major."
+  ],
+  "requirements": [
+    {
+      "id": "ds-ba-societal-data101",
+      "name": "Data 101 (198:142 / 960:142)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:142",
+        "01:960:142"
+      ]
+    },
+    {
+      "id": "ds-ba-societal-inference",
+      "name": "Statistical inference (960:291, 212, 384 or 33:136:385)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:291",
+        "01:960:212",
+        "01:960:384",
+        "33:136:385"
+      ]
+    },
+    {
+      "id": "ds-ba-societal-datamgmt",
+      "name": "Data management (198:210, 960:295 or 04:547:221)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:198:210",
+        "01:960:295",
+        "04:547:221"
+      ]
+    },
+    {
+      "id": "ds-ba-societal-calc1",
+      "name": "Calculus I (640:135 or 151)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:151",
+        "01:640:135"
+      ]
+    },
+    {
+      "id": "ds-ba-societal-linalg",
+      "name": "Linear algebra (640:250)",
+      "type": "all",
+      "courses": [
+        "01:640:250"
+      ]
+    },
+    {
+      "id": "ds-ba-societal-context",
+      "name": "Data in Context (04:547:225, was 04:189:220)",
+      "type": "all",
+      "courses": [
+        "04:547:225"
+      ]
+    },
+    {
+      "id": "ds-ba-societal-calc2",
+      "name": "Calculus II (640:152, or 136)",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:640:152",
+        "01:640:136"
+      ]
+    },
+    {
+      "id": "ds-ba-societal-track",
+      "name": "Societal Impact track courses",
+      "type": "all",
+      "courses": [
+        "01:960:463",
+        "01:960:486",
+        "04:189:103",
+        "04:547:201",
+        "04:547:321"
+      ]
+    },
+    {
+      "id": "ds-ba-societal-elective",
+      "name": "960:365, 467, 490 or an approved domain course",
+      "type": "choose",
+      "count": 1,
+      "from": [
+        "01:960:365",
+        "01:960:467",
+        "01:960:490",
+        "01:198:439",
+        "01:220:322",
+        "01:447:303",
+        "01:450:320",
+        "01:450:321",
+        "01:450:330",
+        "01:750:345",
+        "01:790:391",
+        "01:920:360",
+        "14:332:443"
+      ],
+      "label": "960:365/467/490, or a domain course (CS 439, Econ 322, Genetics 303, Geography 320/321/330, Physics 345, Poli Sci 391, Sociology 360, ECE 443, English 207, SEBS Biotech 485)"
+    }
+  ]
+}

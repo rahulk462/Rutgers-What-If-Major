@@ -73,6 +73,21 @@ def _cmd_add_course(a):
     print(f"Added {c.code} ({c.term}, grade {c.grade}). It counts as completed in every comparison.")
 
 
+def _cmd_add_ap(a):
+    from . import storage
+    if not a.exam:
+        for e in storage.ap_table()["exams"]:
+            print(f"  {e['exam']}: " + "; ".join(f"score {k} -> {', '.join(v)}" for k, v in e["awards"].items()))
+        return 0
+    try:
+        added = storage.add_ap_exam(a.exam, a.score)
+    except ValueError as e:
+        print(e)
+        return 1
+    print(f"Added {', '.join(c.code for c in added)} for AP {a.exam} ({a.score}).")
+    return 0
+
+
 def _cmd_remove_course(a):
     from . import storage
     n = storage.remove_manual(a.code)
@@ -163,6 +178,10 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--credits", type=float)
     s.add_argument("--title")
     s.set_defaults(f=_cmd_add_course)
+    s = sub.add_parser("add-ap", help='add AP credit by exam and score, e.g. add-ap "Calculus BC" 5 (no args: list exams)')
+    s.add_argument("exam", nargs="?")
+    s.add_argument("score", nargs="?", type=int)
+    s.set_defaults(f=_cmd_add_ap)
     s = sub.add_parser("remove-course", help="remove a course you added by hand")
     s.add_argument("code")
     s.set_defaults(f=_cmd_remove_course)

@@ -84,6 +84,25 @@ def add_manual(code: str, grade: str = "T", credits: float | None = None, title:
     return course
 
 
+def ap_table() -> dict:
+    from .requirements import PROGRAM_DIR
+    return json.loads((PROGRAM_DIR / "ap_credit.json").read_text())
+
+
+def add_ap_exam(exam: str, score: int) -> list[TakenCourse]:
+    """Add the Rutgers courses an AP exam + score earns (SAS table)."""
+    table = ap_table()
+    match = next((e for e in table["exams"] if e["exam"].lower() == exam.strip().lower()), None)
+    if match is None:
+        raise ValueError(f"Unknown AP exam {exam!r}. Known: {', '.join(e['exam'] for e in table['exams'])}")
+    awards = match["awards"].get(str(int(score)))
+    if not awards:
+        raise ValueError(f"A score of {score} on AP {match['exam']} earns no Rutgers credit (SAS gives credit for 4 and 5).")
+    total = match["credits"][str(int(score))]
+    each = round(total / len(awards), 2)
+    return [add_manual(code, grade="T", credits=each, term=f"AP {match['exam']} ({score})") for code in awards]
+
+
 def remove_manual(code: str) -> int:
     from .courses import normalize_code
 

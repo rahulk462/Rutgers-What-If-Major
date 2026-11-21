@@ -220,6 +220,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self._send(200, PAGE.read_bytes(), "text/html; charset=utf-8")
             if url.path == "/api/status":
                 return self._json(200, status())
+            if url.path == "/api/ap-exams":
+                from . import storage
+                return self._json(200, storage.ap_table())
             if url.path == "/api/courses":
                 from . import soc, storage
                 cat = soc.load_index()
@@ -271,9 +274,12 @@ class Handler(BaseHTTPRequestHandler):
         except json.JSONDecodeError:
             return self._json(400, {"error": "bad json"})
         path = urlparse(self.path).path
-        if path in ("/api/courses/add", "/api/courses/remove"):
+        if path in ("/api/courses/add", "/api/courses/remove", "/api/courses/add-ap"):
             from . import storage
             try:
+                if path.endswith("add-ap"):
+                    added = storage.add_ap_exam(str(body.get("exam", "")), int(body.get("score") or 0))
+                    return self._json(200, {"added": [c.to_dict() for c in added]})
                 if path.endswith("add"):
                     cr = body.get("credits")
                     c = storage.add_manual(str(body.get("code", "")), grade=str(body.get("grade") or "T"),

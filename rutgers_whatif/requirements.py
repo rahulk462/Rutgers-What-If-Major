@@ -46,7 +46,7 @@ def equivalence_groups() -> dict[str, frozenset[str]]:
 def load_programs(directory: Path = PROGRAM_DIR) -> dict[str, dict]:
     progs = {}
     for f in sorted(directory.glob("*.json")):
-        if f.name == "equivalents.json":
+        if f.name in ("equivalents.json", "ap_credit.json"):
             continue
         p = json.loads(f.read_text())
         progs[p["id"]] = p

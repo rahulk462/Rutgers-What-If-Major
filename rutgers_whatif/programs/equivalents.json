@@ -51,6 +51,20 @@
         "01:640:292"
       ],
       "why": "ASSUMPTION: honors Calc IV / differential equations"
+    },
+    {
+      "codes": [
+        "04:189:220",
+        "04:547:225"
+      ],
+      "why": "Data in Context renumbered (Data Science site, 2026)"
+    },
+    {
+      "codes": [
+        "01:960:384",
+        "01:960:380"
+      ],
+      "why": "960:384 was formerly 960:380"
     }
   ]
 }
