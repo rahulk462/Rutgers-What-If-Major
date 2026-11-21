@@ -89,3 +89,11 @@ def test_prereq_readiness_in_report():
     nxt = {n["code"]: n for n in report["programs"][0]["next_courses"]}
     assert nxt["01:640:252"]["ready"]          # has 250 + 251
     assert nxt["01:640:300"]["ready"]
+
+
+def test_undeclared_compares_everything_sorted():
+    report = whatif.compare(PROGRAMS, list(PROGRAMS), SAMPLE, SOC)
+    left = [p["courses_remaining"] for p in report["programs"]]
+    assert report["current"] == [] and len(left) == len(PROGRAMS) and left == sorted(left)
+    assert all("switch" not in p for p in report["programs"])
+    assert "cs-bs" in whatif.render(report)

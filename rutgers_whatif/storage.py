@@ -61,7 +61,8 @@ def load_courses(json_path: Path | None = None) -> list[TakenCourse]:
     json_path = json_path or config.AUDIT_JSON
     if not json_path.exists():
         raise FileNotFoundError(
-            f"No audit at {json_path}. Run `scrape`, or `import-courses` with a CSV/JSON of your courses.")
+            "No courses loaded yet. Run Discover and then Scrape (or import a course CSV) first. "
+            f"(Looked for {json_path}.)")
     data = json.loads(json_path.read_text())
     return [TakenCourse.from_dict(c) for c in data.get("courses", [])]
 

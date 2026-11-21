@@ -58,6 +58,8 @@ def compare(programs: dict[str, dict], ids: list[str], courses: list[TakenCourse
                               for c in shared_todo),
                           "shared_todo": sorted(shared_todo)}
         rows.append(row)
+    if not current:  # undeclared: show the programs you're closest to finishing first
+        rows.sort(key=lambda r: (r["courses_remaining"], r["credits_remaining"]))
     return {"current": current or [], "programs": rows, "courses_considered": len(best_attempts(courses))}
 
 

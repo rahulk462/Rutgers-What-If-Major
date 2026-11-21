@@ -127,14 +127,23 @@ summary { cursor: pointer; font-weight: 600; }
   </section>
   </div>
 
+  <div class="steps">
   <section id="right">
     <h2><span class="n">5</span>What if…</h2>
     <p class="hint">Choose your current program(s), then the ones you're considering.</p>
-    <div><strong style="font-size:13px">I'm currently in</strong><div class="progs" id="cur"></div></div>
+    <div><strong style="font-size:13px">I'm currently in</strong> <span class="hint" style="font-size:12px">(leave all unchecked if you're undeclared)</span><div class="progs" id="cur"></div></div>
     <div><strong style="font-size:13px">Compare</strong><div class="progs" id="cmp"></div></div>
     <div class="row"><button class="primary" id="run">Compare</button><span class="status" id="st-whatif" style="margin:0"></span></div>
     <div id="results"></div>
   </section>
+
+  <section id="lookup">
+    <h2><span class="n">6</span>Course lookup</h2>
+    <p class="hint">Type a course code or name to see what you need before taking it, the full chain of prerequisites, and which majors and minors it counts toward. It works whether or not you've declared a major. It needs course data from step 4.</p>
+    <div class="row"><input id="q" placeholder="e.g. 01:198:344 or linear algebra" style="flex:1;min-width:0" list="qlist" autocomplete="off"><datalist id="qlist"></datalist><button class="primary" id="lookbtn">Look up</button></div>
+    <div id="course" style="margin-top:10px"></div>
+  </section>
+  </div>
 </main>
 
 <script>
@@ -165,7 +174,7 @@ let programsDrawn = false, lastJobState = null;
 function drawPrograms(programs) {
   if (programsDrawn) return;
   programsDrawn = true;
-  const cur = store.get("current", ["cs-bs"]), cmp = store.get("compare", programs.map(p => p.id));
+  const cur = store.get("current", []), cmp = store.get("compare", programs.map(p => p.id));
   for (const [box, sel, key] of [[$("#cur"), cur, "current"], [$("#cmp"), cmp, "compare"]]) {
     for (const p of programs) {
       const cb = el("input", { type: "checkbox", value: p.id });
@@ -293,6 +302,57 @@ function drawResults(r) {
   }
   out.append(el("p", { class: "hint", style: "margin-top:10px",
     text: "Switch = change in courses left versus your current program; Add = extra courses on top of it. ✓ done · ~ done once in-progress courses pass · ○ open. Elective credits are estimates. Degree Navigator and your advisor have the final word." }));
+}
+
+let searchTimer;
+$("#q").addEventListener("input", () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(async () => {
+    const v = $("#q").value.trim();
+    if (v.length < 3) return;
+    try {
+      const r = await api("/api/search?q=" + encodeURIComponent(v));
+      $("#qlist").replaceChildren(...r.results.map(h => el("option", { value: h.code, label: `${h.code} ${h.title}` })));
+    } catch {}
+  }, 250);
+});
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter") lookupCourse(); });
+$("#lookbtn").addEventListener("click", lookupCourse);
+
+async function lookupCourse() {
+  const box = $("#course"), v = $("#q").value.trim();
+  if (!v) return;
+  box.replaceChildren(el("div", { class: "status", text: "Looking up…" }));
+  let code = v;
+  try {
+    if (!/\d{2,3}:\d{3}/.test(v)) {
+      const r = await api("/api/search?q=" + encodeURIComponent(v));
+      if (!r.have_soc) { box.replaceChildren(el("div", { class: "status warn", text: "Download course data in step 4 first." })); return; }
+      if (!r.results.length) { box.replaceChildren(el("div", { class: "status bad", text: "No course matches that." })); return; }
+      code = r.results[0].code;
+    }
+    const d = await api("/api/course?code=" + encodeURIComponent(code));
+    const out = [el("div", {}, el("strong", { text: `${d.code} ${d.title || ""}` }), d.credits ? ` · ${d.credits} credits` : "")];
+    if (!d.have_soc) out.push(el("div", { class: "status warn", text: "Download course data in step 4 to see prerequisites." }));
+    else if (!d.known) out.push(el("div", { class: "status warn", text: "Not in the downloaded terms. Try downloading another term." }));
+    if (!d.have_courses) out.push(el("div", { class: "status", text: "No courses loaded yet, so this assumes you haven't taken anything." }));
+    out.push(el("div", { class: "sub", style: "margin-left:0", text: "Prerequisites: " + d.prereqs }));
+    out.push(el("div", { class: "status " + (d.taken || d.ready ? "good" : "warn"),
+      text: d.taken ? "You've already taken this." : d.ready ? "You can take this now." : "You need prerequisites first." }));
+    if (d.path.length) {
+      out.push(el("div", { style: "margin-top:6px;font-size:14px", text: "Take these first, in order:" }));
+      const ol = el("ol", { style: "margin:4px 0 0 0;padding-left:22px;font-size:14px" });
+      d.path.forEach(p => ol.append(el("li", {}, el("span", { class: "chip", text: p.code }), " " + (p.title || ""))));
+      out.push(ol);
+    }
+    if (d.counts_toward.length) {
+      out.push(el("div", { style: "margin-top:8px;font-size:14px", text: "Counts toward:" }));
+      const ul = el("ul", { style: "margin:4px 0 0 0;padding-left:22px;font-size:14px" });
+      d.counts_toward.forEach(c => ul.append(el("li", { text: `${c.program_name}: ${c.requirement}` })));
+      out.push(ul);
+    } else out.push(el("div", { class: "status", text: "Doesn't count toward any of the programs defined here." }));
+    box.replaceChildren(...out);
+  } catch (e) { box.replaceChildren(el("div", { class: "status bad", text: e.message })); }
 }
 
 refresh();
