@@ -36,3 +36,19 @@ def test_gitignore_protects_secrets():
     from pathlib import Path
     text = (Path(__file__).parent.parent / ".gitignore").read_text()
     assert "auth.json" in text and "data/" in text
+
+
+class _FakePage:
+    def __init__(self, url, closed=False):
+        self.url, self._closed = url, closed
+
+    def is_closed(self):
+        return self._closed
+
+
+def test_window_state():
+    from rutgers_whatif import browser as br
+    assert br.window_state(_FakePage("https://cas.rutgers.edu/login"), auth.is_login_url)["state"] == "login"
+    assert br.window_state(_FakePage("https://dn.rutgers.edu/DN/Audit"), auth.is_login_url)["state"] == "signed_in"
+    assert br.window_state(_FakePage("https://example.com/"), auth.is_login_url)["state"] == "other"
+    assert br.window_state(_FakePage("", closed=True), auth.is_login_url)["state"] == "closed"

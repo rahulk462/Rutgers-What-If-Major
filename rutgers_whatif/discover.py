@@ -54,7 +54,7 @@ def summarize(index: list[dict]) -> dict:
 
 
 def run(auth_file: Path = config.AUTH_FILE, start_url: str = config.DN_HOME_URL,
-        wait=input) -> dict:
+        wait=lambda prompt, tick=None: input(prompt)) -> dict:
     from playwright.sync_api import sync_playwright
 
     config.ensure_dirs()
@@ -81,24 +81,37 @@ def run(auth_file: Path = config.AUTH_FILE, start_url: str = config.DN_HOME_URL,
                       "file": name, "bytes": len(body)})
 
     state = auth.load_state(auth_file)
+    from . import browser as br
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(**config.launch_kwargs(headless=False))
+        browser, channel = br.launch_headed(p)
         context = browser.new_context(storage_state=state)
         page = context.new_page()
         page.on("response", on_response)
-        page.goto(start_url)
+        br.bring_to_front(page, channel)
+        page.goto(start_url, wait_until="domcontentloaded", timeout=60_000)
+        br.bring_to_front(page, channel)
         if auth.is_login_url(page.url):
             browser.close()
-            raise auth.SessionExpired("Saved session expired. Run `python -m rutgers_whatif login` again.")
+            raise auth.SessionExpired("Your saved session has expired. Log in again first.")
         print(
-            "\nRecording. In the browser window, open (slowly, one at a time):\n"
+            "\nRecording. In the separate browser window that just opened (not your own browser), open (slowly, one at a time):\n"
             "  1. your degree audit for each program you are in\n"
             "  2. your course history / 'My Courses' page\n"
             "  3. optionally a what-if audit for another program\n"
             "Then come back here and press Enter."
         )
-        wait("Press Enter when done... ")
-        browser.close()
+
+        def tick() -> dict:
+            st = br.window_state(page, auth.is_login_url)
+            st["captured"] = len(index)
+            return st
+
+        wait("Press Enter when done... ", tick)
+        try:
+            browser.close()
+        except Exception:  # noqa: BLE001 - window may already be closed
+            pass
 
     (out_dir / "index.json").write_text(json.dumps(index, indent=2))
     pages = summarize(index)

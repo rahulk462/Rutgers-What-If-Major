@@ -38,30 +38,74 @@ def _secure_write(path: Path, data: dict) -> None:
     os.chmod(path, stat.S_IRUSR | stat.S_IWUSR)
 
 
-def _terminal_wait(prompt: str) -> None:
+def _terminal_wait(prompt: str, tick=None) -> None:
     input(prompt)
+
+
+class LoginWindowClosed(RuntimeError):
+    pass
 
 
 def login(auth_file: Path = config.AUTH_FILE, start_url: str = config.DN_HOME_URL,
           wait=_terminal_wait) -> Path:
-    """Open a headed browser, let the user log in by hand, save the session."""
+    """Open a visible browser window, let the user log in by hand there, save the session.
+
+    ``wait(prompt, tick)`` blocks until the user says they're done; ``tick()``
+    reports what the login window currently shows so a UI can display it.
+    """
     from playwright.sync_api import sync_playwright
 
+    from . import browser as br
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(**config.launch_kwargs(headless=False))
-        context = browser.new_context()
-        page = context.new_page()
-        page.goto(start_url)
-        print(
-            "\nA browser window is open. Log in with your NetID and approve Duo yourself.\n"
-            "When your Degree Navigator page has fully loaded, come back here and press Enter."
-        )
-        wait("Press Enter when you are logged in... ")
-        if is_login_url(page.url):
-            browser.close()
-            raise SessionExpired("Still on the login page; nothing saved. Try logging in again.")
-        _secure_write(auth_file, context.storage_state())
-        browser.close()
+        browser, channel = br.launch_headed(p)
+        try:
+            context = browser.new_context()
+            page = context.new_page()
+            print("Opened a separate browser window for Rutgers login.")
+            print("Sign in THERE (NetID + Duo). Signing in in your own browser tab won't work.")
+            br.bring_to_front(page, channel)
+            try:
+                page.goto(start_url, wait_until="domcontentloaded", timeout=60_000)
+            except Exception as e:  # noqa: BLE001 - keep the window open; user can still navigate
+                print(f"Degree Navigator was slow to load ({e.__class__.__name__}); keep going in the window.")
+            br.bring_to_front(page, channel)
+
+            def tick() -> dict:
+                return br.window_state(page, is_login_url)
+
+            wait("When Degree Navigator has loaded in that window, press Enter... ", tick)
+            state = tick()
+            print(f"Login window is on: {state.get('url') or '(closed)'}")
+            if state["state"] == "closed":
+                raise LoginWindowClosed("The login window was closed before the session was saved. "
+                                        "Click Log in again and leave the window open until you click I'm done.")
+            if state["state"] != "signed_in":
+                # The window may be sitting on a "Log In Successful" page (cas.rutgers.edu) or
+                # somewhere else; ask Degree Navigator itself whether we're logged in.
+                print("Checking with Degree Navigator whether the login worked...")
+                try:
+                    page.goto(start_url, wait_until="domcontentloaded", timeout=60_000)
+                except Exception as e:  # noqa: BLE001
+                    print(f"Degree Navigator didn't load ({e.__class__.__name__}).")
+                state = tick()
+                print(f"Degree Navigator sent the window to: {state.get('url') or '(closed)'}")
+            if state["state"] == "login":
+                raise SessionExpired("Degree Navigator still shows the Rutgers sign-in page, so nothing was saved. "
+                                     "Finish NetID + Duo in that window until you see your Degree Navigator "
+                                     "page, then click I'm done.")
+            data = context.storage_state()
+            n = sum(1 for c in data.get("cookies", []) if c.get("domain", "").lstrip(".").endswith("rutgers.edu"))
+            print(f"Saving {n} Rutgers cookies.")
+            if n == 0:
+                raise SessionExpired("The window has no Rutgers login cookies, so nothing was saved. "
+                                     "Sign in to Degree Navigator in that window, then click I'm done.")
+            _secure_write(auth_file, data)
+        finally:
+            try:
+                browser.close()
+            except Exception:  # noqa: BLE001
+                pass
     print(f"Session saved to {auth_file} (keep it private; it is git-ignored).")
     return auth_file
 
