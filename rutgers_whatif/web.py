@@ -44,14 +44,29 @@ class Jobs:
         self.state = "idle"            # idle | running | waiting | done | error
         self.log: list[str] = []
         self.prompt = ""
+        self.window: dict = {}
         self._continue = threading.Event()
 
-    def wait_for_user(self, prompt: str) -> None:
-        self.prompt = prompt.replace("Press Enter", "Click 'I'm done'")
+    def wait_for_user(self, prompt: str, tick=None) -> None:
+        """Block the job until the page's "I'm done" button; meanwhile poll ``tick`` for live status."""
+        self.prompt = prompt.strip().rstrip(".").rstrip() + "."
+        self.prompt = self.prompt.replace("press Enter", "click \u201cI'm done\u201d").replace(
+            "Press Enter", "Click \u201cI'm done\u201d")
         self.state = "waiting"
-        self.log.append(self.prompt)
         self._continue.clear()
-        self._continue.wait()
+        while not self._continue.wait(1.0):
+            if tick:
+                try:
+                    self.window = tick()
+                except Exception:  # noqa: BLE001
+                    self.window = {"state": "closed", "url": ""}
+                if self.window.get("state") == "closed":
+                    break       # window closed: stop waiting, the job reports it
+        if tick:
+            try:
+                self.window = tick()
+            except Exception:  # noqa: BLE001
+                self.window = {"state": "closed", "url": ""}
         self.state = "running"
         self.prompt = ""
 
@@ -65,7 +80,7 @@ class Jobs:
         with self.lock:
             if self.state in ("running", "waiting"):
                 return False
-            self.name, self.state, self.log, self.prompt = name, "running", [], ""
+            self.name, self.state, self.log, self.prompt, self.window = name, "running", [], "", {}
 
         def target():
             try:
@@ -76,14 +91,16 @@ class Jobs:
             except BaseException as e:  # noqa: BLE001 - surface everything to the page
                 self.state = "error"
                 self.log.append(f"Error: {e}")
-                if not isinstance(e, (SystemExit, RuntimeError, FileNotFoundError)):
+                if not isinstance(e, (SystemExit, RuntimeError, FileNotFoundError)) or \
+                        e.__class__.__name__ == "Error":
                     self.log.append(traceback.format_exc(limit=3))
 
         threading.Thread(target=target, daemon=True).start()
         return True
 
     def to_dict(self) -> dict:
-        return {"name": self.name, "state": self.state, "log": self.log[-200:], "prompt": self.prompt}
+        return {"name": self.name, "state": self.state, "log": self.log[-200:], "prompt": self.prompt,
+                "window": self.window}
 
 
 JOBS = Jobs()

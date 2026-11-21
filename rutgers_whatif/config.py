@@ -47,3 +47,9 @@ def launch_kwargs(headless: bool) -> dict:
     if os.environ.get("RWI_CHROMIUM_PATH"):
         kw["executable_path"] = os.environ["RWI_CHROMIUM_PATH"]
     return kw
+
+
+def browser_channel() -> str | None:
+    """RWI_BROWSER=chrome or msedge uses your installed browser (separate profile) instead of Playwright's Chromium."""
+    ch = os.environ.get("RWI_BROWSER", "").strip().lower()
+    return ch or None

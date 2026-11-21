@@ -41,7 +41,11 @@ This opens **http://127.0.0.1:8000** (use `--port` to change it, or `--no-browse
 to stop it opening a tab). The page walks you through the same steps as the
 commands below: log in, discover, scrape (or paste a course CSV), download course
 data, then compare programs. When a step opens a browser window for you (login
-or discovery), do your part there, then click **I'm done** on the page. The
+or discovery), do your part there, then click **I'm done** on the page. Log in **inside that separate window**. Signing in to Degree Navigator in
+your everyday browser doesn't count, because the tool can only save a login
+from the window it opened. If Playwright's Chromium isn't installed, it falls
+back to your installed Chrome or Edge (still in a separate window). You can
+force that with `RWI_BROWSER=chrome`. The
 server only listens on 127.0.0.1 and rejects requests from any other host name.
 Stop it with Ctrl+C.
 
